@@ -2,6 +2,9 @@ package codeisgroup.sananismayilov.onboarding.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -50,12 +55,20 @@ fun WelcomeScreen(navController: NavHostController, viewmodel: WelcomeViewModel 
     val pagerstate = rememberPagerState()
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+
     ) {
         HorizontalPager(
             count = 3,
             state = pagerstate,
-            modifier = Modifier.weight(10f),
+            modifier = Modifier
+                .weight(10f)
+                .scrollable(
+                    orientation = Orientation.Vertical,
+                    enabled = true,
+                    state = rememberScrollState()
+                ),
             verticalAlignment = Alignment.Top
         ) { position ->
             PagerScreen(onBoardingPage = pages[position])
@@ -66,7 +79,7 @@ fun WelcomeScreen(navController: NavHostController, viewmodel: WelcomeViewModel 
                 .align(Alignment.CenterHorizontally)
                 .weight(1f),
         )
-        finishButton(modifier = Modifier.weight(1f), pagerState = pagerstate) {
+        finishButton(pagerState = pagerstate) {
             println("-----finish button")
             // save data store and navigate by popstack
             viewmodel.putCompletedOnBoardShowing(true)
@@ -115,13 +128,12 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun finishButton(
-    modifier: Modifier,
     pagerState: PagerState,
     onclick: () -> Unit
 ) {
     Row(
-        modifier = modifier
-            .padding(horizontal = 40.dp),
+        modifier = Modifier
+            .padding(top = 10.dp, start = 40.dp, end = 40.dp, bottom = 20.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -140,6 +152,7 @@ fun finishButton(
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
